@@ -1,6 +1,16 @@
 #include "dijkstra.h"
 
-std::vector<int> calcualtePath(const std::vector<int>& predecessors, const int start, const int finish) {
+void Result::printResult() {
+	if (listOfVertecesInShorestPath != std::nullopt) {
+		std::cout << std::endl << "Shortest Path from: " << (*listOfVertecesInShorestPath).front() << " to: " << (*listOfVertecesInShorestPath).back() << " is: ";
+		for (auto& vertex : *listOfVertecesInShorestPath) {
+			std::cout << vertex << " ";
+		}
+		std::cout << std::endl << "with the weight of path: " << lenghtOfPath << std::endl;
+	}
+}
+
+std::vector<int> calculatePath(const std::vector<int>& predecessors, const int start, const int finish) {
 	std::vector<int> resultingPath;
 	for (int vertex = finish; vertex != start; vertex = predecessors[vertex]) {
 		resultingPath.push_back(vertex);
@@ -12,7 +22,7 @@ std::vector<int> calcualtePath(const std::vector<int>& predecessors, const int s
 };
 Result dijkstra(const std::vector<int>& vertece, const std::vector<Edge>& edgesList, const int start, const int finish) {
 
-	const int numberOfVertexes = vertece.size();
+	const int numberOfVertexes = vertece.size(); //size_t to int
 
 	if (start == finish) { return Result(std::move(std::vector<int>{start}), 0); }
 
@@ -59,7 +69,7 @@ Result dijkstra(const std::vector<int>& vertece, const std::vector<Edge>& edgesL
 	}
 	//recreate shortest path from finish to start
 	if (distancesFromStart[finish] == MAX) { return (Result(std::nullopt, MAX)); }/* or throw and error: throw std::runtime_error("No path exists between the source and destination."*/
-	std::vector<int> resultingPath = calcualtePath(predecessors, start, finish);
+	std::vector<int> resultingPath = calculatePath(predecessors, start, finish);
 
 	return (Result(std::move(resultingPath), distancesFromStart[finish]));
 }
